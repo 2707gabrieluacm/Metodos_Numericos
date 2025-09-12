@@ -1,0 +1,147 @@
+---
+title: "Clase 10 Septiembre MN"
+author: "Ortiz Cruz José Gabriel"
+date: "2025-09-10"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Ejemplo de función
+
+```{r}
+Discriminante <- function(a,b,c){
+  soluciones <- b^2-4*a*c
+  if(soluciones < 0){
+    resp <- "No hay solución real"
+  } else {
+    resp <- "Sí hay solución real"
+  }
+  cat(resp, "- Discriminante:", soluciones, "\n")
+  return(soluciones)
+}
+```
+
+```{r}
+Intento1 <- Discriminante(5,2,3);
+```
+
+# Matrices
+
+```{r}
+valores <- c(15,3,-2,13,27,10,8,-4,11);
+A <- matrix(valores, nrow = 3); (A)
+```
+
+```{r}
+tA <- matrix(t(valores), nrow = 3)
+(tA)
+```
+
+```{r}
+b <- c(-3,2,-1)
+b <- matrix(b, nrow = 3); (b)
+```
+
+```{r}
+Ab <- cbind(A,b);
+(Ab)
+```
+
+```{r}
+bA <- cbind(b,A);
+(bA)
+```
+
+```{r}
+Abt <- rbind(A, t(b));
+(Abt)
+```
+
+```{r}
+btA <- rbind(t(b),A);
+(btA)
+```
+
+```{r}
+r1 <- Ab [1,]; 
+r2 <- Ab [2,]; 
+r3 <- Ab [3,]; 
+c1 <- Ab [,1]; 
+c2 <- Ab [,2]; 
+c3 <- Ab [,3];
+```
+
+```{r}
+a11 <- Ab [1,1]; 
+a22 <- Ab [2,2]; 
+a32 <- Ab [3,2]; 
+a23 <- Ab [2,3]; 
+a14 <- Ab [1,4]; 
+a24 <- Ab [2,4]; 
+```
+
+## Eliminacion Gaussiana Simple
+
+```{r}
+m1 <- -Ab[2,1]/Ab[1,1]; (m1)
+m2 <- -Ab[3,1]/Ab[1,1]; (m2)
+A1 <- Ab[1,]; (A1)
+A2 <- m1*Ab[1,]+Ab[2,];(A2)
+A3 <- m2*Ab[1,]+Ab[3,]; (A3)
+NuevaA <- rbind(A1,A2,A3); (NuevaA)
+```
+
+```{r}
+Ab <- NuevaA
+m3 <- -Ab[3,2]/Ab[2,2]
+A3 <- m3*Ab[2,]+Ab[3,];(A3)
+A1 <- Ab[1,]
+A2 <- Ab[2,]
+NuevaA <- rbind(A1,A2,A3); (NuevaA)
+```
+
+
+```{r}
+Ab <- NuevaA
+m4 <- -Ab[2,3]/Ab[3,3]
+m5 <- -Ab[1,3]/Ab[3,3]
+A2 <- m4*Ab[3,]+Ab[2,]; (A2)
+A1 <- m5*Ab[3,]+Ab[1,]; (A1)
+A3 <- Ab[3,]
+NuevaA <- rbind(A1,A2,A3); (NuevaA)
+```
+
+
+```{r}
+Ab <- NuevaA
+m6 <- -Ab[1,2]/Ab[2,2]
+A1 <- m6*Ab[2,]+Ab[1,]; (A1)
+A2 <- Ab[2,]
+A3 <- Ab[3,]
+NuevaA <- rbind(A1,A2,A3); (NuevaA)
+```
+
+# Obtener los valores de las variables desde la matriz final
+
+```{r}
+x1 <- NuevaA[1,4] / NuevaA[1,1]
+x2 <- NuevaA[2,4] / NuevaA[2,2] 
+x3 <- NuevaA[3,4] / NuevaA[3,3]
+
+```
+
+# Mostrar los resultados
+```{r}
+cat("x1 =", x1, "\n")
+cat("x2 =", x2, "\n") 
+cat("x3 =", x3, "\n")
+```
+
+# Mostrar la matriz final para ver los valores exactos
+```{r}
+print("Matriz final:")
+print(NuevaA)
+```
