@@ -1,0 +1,94 @@
+---
+title: "Sesiones del curso de Mérodos Numéricos"
+author: "Ortiz Cruz José Gabriel"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+x1 <- c(1.2,1-5.1-9,1-10); (x1)
+```
+
+
+```{r}
+x2 <- (1:20); (x2)
+```
+
+```{r}
+x3<- seq(1,20,by=0.1); (x3)
+```
+
+```{r}
+x4 <- seq(20,1,by=-0.1); (x4)
+```
+
+```{r}
+x5 <- rep(1,times=10); (x5)
+```
+
+```{r}
+n1 <- length(x1); (n1)
+n2 <- length(x1); (n2)
+n3 <- length(x1); (n3)
+n4 <- length(x1); (n4)
+n5 <- length(x1); (n5)
+```
+
+```{r}
+x <- runif(100,-3,3); (x)
+```
+
+Ejemplo de Redondeo y Truncamiento
+
+```{r}
+x <- runif(20,-1,1); (x)
+xx <- 100*x; (xx)
+```
+
+Fijamos la semilla para generar números aleatorios
+
+```{r}
+set.seed(123)
+x <- runif(20,-1,1); (x)
+xx <- 100*x; (xx)
+```
+
+Redondeamos tres cifras significativas
+
+```{r}
+x_red2 <- round(xx,2); (x_red2)
+x_red3 <- round(xx,3); (x_red3)
+```
+
+Generamos una nueva variable con 5000 datos, con una distribución uniforme entre -10 y 10, con 3 cifras significativas, posterior mente obtendremos una muestra de tamaño 500 con el comando sample(datos:origen,tamaño_de_la_muestra), y se almacenara en la variable muestra_1:
+
+```{r}
+y <- runif(500,-10,10); (y)
+head(y,10)
+tail(y,10)
+redoy1 <- round(y,3); (redoy1)
+head(redoy1,15)
+tail(redoy1,15)
+muestra_1 <- sample(redoy1,500);
+head(muestra_1,10)
+tail(muestra_1,10)
+```
+
+Convertimos todos a números positivos
+
+```{r}
+muestra_2 <- abs(muestra_1)
+head(muestra_2,15)
+tail(muestra_2,15)
+```
+
+```{r}
+l <- runif(15,-1,1); (l)
+digi2 <- (l*100); (digi2)
+redol <- round(digi2,0); (redol)
+```
