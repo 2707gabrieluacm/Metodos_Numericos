@@ -1,0 +1,314 @@
+---
+title: "Clase_MN_17_09"
+author: "Ortiz Cruz José Gabriel"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 3
+    code_folding: show
+    theme: cosmo
+  word_document: default
+---
+```{r tiempo-total-inicio, include=FALSE}
+tiempo_total_inicio <- Sys.time()
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Matriz a Analizar
+
+```{r}
+# 5x+2y-3z+4w=-1
+# -x+y+z-3w=2
+# 6x+6y+4z+w=0
+# x-y-z+w=2
+```
+
+## La convertimos en una matriz
+
+```{r}
+valores <- c(5, -1, 6, 1, 2, 1, 6, -1, -3, -3, 4, -1, 4, -3, 1, 1);
+A <- matrix(valores, nrow = 4); (A)
+```
+
+## Obtenemos b
+
+```{r}
+b <- c(-1,2,0,2)
+b <- matrix(b, nrow = 4); (b)
+```
+
+## Adjuntamos y obtenemos la matriz
+
+```{r}
+Ab <- cbind(A,b);
+(Ab)
+```
+
+# Elminacion Gaussiana con pivoteo parcial
+
+```{r}
+# Analizamos si hay un absoluto mayor, para ponerlo encima
+matrices_absoluta <- abs(Ab);
+(matrices_absoluta)
+
+matrices_mayor <- max(matrices_absoluta )
+cat("La matriz mayor es", (matrices_mayor))
+
+# Intercambiamos 
+R1 <- Ab[3,]; (R1)
+R3 <- Ab[1,]; (R3)
+R2 <- Ab[2,]; (R2)
+R4 <- Ab[4,]; (R4)
+NuevaA <- rbind(R1,R2,R3,R4); (NuevaA)
+```
+
+```{r}
+Ab <- NuevaA; (Ab)
+m1 <- -Ab[2,1]/Ab[1,1]; (m1)
+m2 <- -Ab[3,1]/Ab[1,1]; (m2)
+m3 <- -Ab[4,1]/Ab[1,1]; (m3)
+```
+
+```{r}
+R1 <- Ab[1,]
+R2 <- m1*Ab[1,]+Ab[2,]; (R2)
+R3 <- m2*Ab[1,]+Ab[3,]; (R3)
+R4 <- m3*Ab[1,]+Ab[4,]; (R4)
+NuevaA <- rbind(R1,R2,R3,R4); (NuevaA)
+```
+
+```{r}
+R1 <- NuevaA[1,];
+R2 <- NuevaA[3,];
+R3 <- NuevaA[2,];
+R4 <- NuevaA[4,];
+Ab <- rbind(R1,R2,R3,R4); (Ab)
+```
+
+```{r}
+m4 <- -Ab[3,2]/Ab[2,2];
+m5 <- -Ab[4,2]/Ab[2,2];
+R3 <- m4*Ab[2,]+Ab[3,];(R3)
+R4 <- m5*Ab[2,]+Ab[4,];(R4)
+NuevaA <- rbind(R1,R2,R3,R4); (NuevaA)
+```
+
+```{r}
+Ab <- NuevaA; (Ab)
+m6 <- -Ab[4,3]/Ab[3,3]; (m6)
+```
+
+```{r}
+R4 <- m6*Ab[3,]+Ab[4,]; (R4)
+NuevaA <- rbind(R1,R2,R3,R4); (NuevaA)
+```
+
+```{r}
+Ab <- NuevaA; (Ab)
+m7 <- -Ab[3,4]/Ab[4,4]; (m7)
+m8 <- -Ab[2,4]/Ab[4,4]; (m8)
+m9 <- -Ab[1,4]/Ab[4,4]; (m9)
+```
+
+```{r}
+R3 <- m7*Ab[4,]+Ab[3,]; (R3)
+R2 <- m8*Ab[4,]+Ab[2,]; (R2)
+R1 <- m9*Ab[4,]+Ab[1,]; (R1)
+NuevaA <- rbind(R1,R2,R3,R4); (NuevaA)
+```
+
+```{r}
+Ab <- NuevaA; (Ab)
+m10 <- -Ab[2,3]/Ab[3,3]; (m10)
+m11 <- -Ab[1,3]/Ab[3,3]; (m11)
+```
+
+```{r}
+R2 <- m10*Ab[3,]+Ab[2,]; (R2)
+R1 <- m11*Ab[3,]+Ab[1,]; (R1)
+NuevaA <- rbind(R1,R2,R3,R4); (NuevaA)
+```
+
+```{r}
+Ab <- NuevaA; (Ab)
+m12 <- -Ab[1,2]/Ab[2,2]; (m12)
+```
+
+```{r}
+R1 <- m12*Ab[2,]+Ab[1,]; (R1)
+NuevaA <- rbind(R1,R2,R3,R4); (NuevaA)
+```
+
+## Obtener los valores de las variables desde la matriz final
+
+```{r}
+x <- NuevaA[1,5] / NuevaA[1,1]
+y <- NuevaA[2,5] / NuevaA[2,2] 
+z <- NuevaA[3,5] / NuevaA[3,3]
+w <- NuevaA[4,5] / NuevaA[4,4]
+
+```
+
+## Mostrar los resultados
+
+```{r}
+cat("x =", x, "\n")
+cat("y =", y, "\n") 
+cat("z =", z, "\n")
+cat("w =", w, "\n")
+```
+
+# Eliminacion con Jauss Jordan
+
+## Lo voy a realizar con lo que vimo en la clase del día de hoy, 23/Sep, realizamos limpieza
+
+```{r, echo=FALSE}
+rm(list = ls())
+dev.off()
+```
+
+```{r}
+valores <- c(2,-3,-2,1,-1,1,-1,2,2);
+A <- matrix(valores, nrow = 3); (A)
+```
+
+## Obtenemos la determinante
+
+```{r}
+detA <- A[1,1]*((A[2,2]*A[3,3])-(A[3,2]*A[2,3]))-A[1,2]*((A[2,1]*A[3,3])-(A[3,1]*A[2,3]))+A[1,3]*((A[2,1]*A[3,2])-(A[3,1]*A[2,2]));
+(detA)
+```
+
+## Obtenemos b
+
+```{r}
+b <- c(8,-11,-3)
+b <- matrix(b, nrow = 3); (b)
+```
+
+## Ocupamos otra matriz para sacra la inversa, esta va a ser diagonal de ceros
+
+```{r}
+valores <- c(1,0,0,0,1,0,0,0,1);
+B <- matrix(valores, nrow = 3); (B)
+```
+
+## Adjuntamos y obtenemos la matriz, procedemos a sacar la inversa
+
+```{r}
+AB <- cbind(A,B);
+(AB)
+```
+
+```{r}
+# Analizamos si hay un absoluto mayor, para ponerlo encima
+matrices_absoluta <- abs(AB);
+(matrices_absoluta)
+
+matrices_mayor <- max(matrices_absoluta )
+cat("La matriz mayor es", (matrices_mayor))
+
+# Intercambiamos 
+R1 <- AB[2,]; (R1)
+R2 <- AB[1,]; (R2)
+R3 <- AB[3,]; (R3)
+NuevaA <- rbind(R1,R2,R3); (NuevaA)
+```
+
+## Conertimos fila 1 a "1"
+
+```{r}
+AB <- NuevaA; (AB)
+m1 <- 1/AB[1,1]; (m1)
+```
+
+```{r}
+R1 <- m1*AB[1,]
+NuevaA <- rbind(R1,R2,R3); (NuevaA)
+```
+
+## No hay decesidad de hacer pivoteo
+
+```{r}
+AB <- NuevaA; (AB)
+m2 <- -AB[2,1]/AB[1,1]; (m2)
+m3 <- -AB[3,1]/AB[1,1]; (m3)
+```
+
+```{r}
+R2 <- m2*AB[1,]+AB[2,]; (R2)
+R3 <- m3*AB[1,]+AB[3,]; (R3)
+NuevaA <- rbind(R1,R2,R3); (NuevaA)
+```
+
+## Intercambiamos 
+
+```{r}
+R1 <- NuevaA[1,];
+R2 <- NuevaA[3,];
+R3 <- NuevaA[2,];
+AB <- rbind(R1,R2,R3); (AB)
+```
+
+## Convertimos Fila 2 a 1 
+
+```{r}
+m4 <- 1/AB[2,2];
+R2 <- m4*AB[2,]; (R2)
+NuevaA <- rbind(R1,R2,R3); (NuevaA)
+```
+
+```{r}
+AB <- NuevaA; (AB)
+m5 <- -AB[3,2]/AB[2,2];
+R3 <- m5*AB[2,]+AB[3,];(R3)
+NuevaA <- rbind(R1,R2,R3); (NuevaA)
+```
+
+## Convertimos Fila 3 a 1
+
+```{r}
+AB <- NuevaA; (AB)
+m6 <- 1/AB[3,3]; (m6)
+R3 <- m6*AB[3,]
+NuevaA <- rbind(R1,R2,R3); (NuevaA)
+```
+
+
+```{r}
+AB <- NuevaA; (AB) # Importante agregar
+m7 <- -AB[2,3]/AB[3,3];
+m8 <- -AB[1,3]/AB[3,3];
+R2 <- m7*AB[3,]+AB[2,];(R2)
+R1 <- m8*AB[3,]+AB[1,];(R1)
+NuevaA <- rbind(R1,R2,R3); (NuevaA) # De igual manera importante de agregar 
+```
+
+```{r}
+AB <- NuevaA; (AB)
+m9 <- -AB[1,2]/AB[2,2];
+R1 <- m9*AB[2,]+AB[1,];(R1)
+NuevaA <- rbind(R1,R2,R3); (NuevaA)
+```
+
+## Damos la inversa
+
+```{r}
+AB <- NuevaA; (AB)
+resul <- c(AB[1,4],AB[2,4],AB[3,4],AB[1,5],AB[2,5],AB[3,5],AB[1,6],AB[2,6],AB[3,6]);
+inverA <- matrix(resul, nrow = 3); (inverA)
+```
+
+## Multiplicamos matrices "A^-1" por "b"
+
+```{r}
+resultado <- (inverA%*%b); (resultado)
+```
+
+
+
