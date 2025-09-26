@@ -1,0 +1,458 @@
+---
+title: "Clase de Métodos Numéricos"
+author: "Carlos E Martínez-Rodríguez"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 3
+    code_folding: show
+    #theme: flatly
+    theme: journal
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Inversa de una matriz
+
+```{r}
+A=matrix(c(1,3,-2,1,1,4,-1,2,0,1,-1,4,2,6,1,2),nrow = 4,byrow = TRUE)
+(A)
+Aorig<- A
+```
+
+1)
+
+```{r}
+I = diag(4);(I)
+```
+
+2)
+
+```{r}
+AInv <- cbind(A,I); (AInv)
+A <- AInv
+```
+
+3)
+
+```{r}
+l21 <- A[2,1]/A[1,1];(l21)
+l31 <- A[3,1]/A[1,1];(l31)
+l41 <- A[4,1]/A[1,1];(l41)
+```
+
+4)
+
+```{r}
+A[2,] <- A[2,]-l21*A[1,]; 
+A[3,] <- A[3,]-l31*A[1,]; 
+A[4,] <- A[4,]-l41*A[1,]; 
+(A)
+```
+
+5)
+
+```{r}
+Atmp <- A[2,]
+A[2,] <- A[3,]
+A[3,] <- Atmp
+(A)
+```
+
+6)
+
+```{r}
+l32 <- A[3,2]/A[2,2];(l32)
+l42 <- A[4,2]/A[2,2];(l42)
+```
+
+7)
+
+```{r}
+A[3,] <- A[3,]-l32*A[2,]; 
+A[4,] <- A[4,]-l42*A[2,]; 
+(A)
+```
+
+8)
+
+```{r}
+esc <- 1/A[3,3]
+A[3,] <- esc*A[3,]
+(A)
+```
+
+9)
+
+```{r}
+l43 <- A[4,3]/A[3,3];(l43)
+```
+
+10)
+
+```{r}
+A[4,] <- A[4,]-l43*A[3,];
+(A)
+```
+
+11)
+
+```{r}
+esc <- 1/A[4,4]
+A[4,] <- esc*A[4,]
+(A)
+```
+
+12)
+
+```{r}
+l34 <- A[3,4]/A[4,4];(l34); A[3,] <- A[3,]-l34*A[4,]
+l24 <- A[2,4]/A[4,4];(l24); A[2,] <- A[2,]-l24*A[4,]
+l14 <- A[1,4]/A[4,4];(l14); A[1,] <- A[1,]-l14*A[4,]
+(A)
+```
+
+13)
+
+```{r}
+l23 <- A[2,3]/A[3,3];(l23); A[2,] <- A[2,]-l23*A[3,]
+l13 <- A[1,3]/A[3,3];(l13); A[1,] <- A[1,]-l13*A[3,]
+(A)
+
+```
+
+14)
+
+```{r}
+l12 <- A[1,2]/A[2,2];(l12); A[1,] <- A[1,]-l12*A[2,]
+(A)
+```
+
+15)
+
+```{r}
+AInv <- A[,5:8]; (AInv)
+```
+
+16)
+
+```{r}
+IdCalc <- Aorig%*%AInv; (IdCalc)
+```
+
+
+# Factorización LU
+
+## Ejemplo 1
+
+```{r}
+A=matrix(c(1,1,1,1,2,3,1,5,-1,1,-5,3,3,1,7,-2),byrow = TRUE,nrow = 4); (A)
+```
+
+
+```{r}
+b=matrix(c(10,31,-2,18),nrow = 4);(b)
+```
+
+
+```{r}
+Ab <- cbind(A,b); (Ab)
+```
+Los pivotes se definen como $a_{kk}^{(k)}$, luego construimos los multiplicadores: $l_{i,k}=a_{ik}^{(k)}/a_{kk}^{(k)}$, $l_{21}=a_{21}/a_{aa}$ y $l_{31}=a_{31}/a_{11}$ y $l_{41}=a_{41}/a_{11}$
+
+```{r}
+A <- Ab;
+l21 <- A[2,1]/A[1,1];(l21)
+l31 <- A[3,1]/A[1,1];(l31)
+l41 <- A[4,1]/A[1,1];(l41)
+```
+
+Construimos la matriz $U$, donde las entradas $a_{ij}^{(k+1)}=a_{ik}^{(k)}-l_{ik}\times a_{kj}^{(k)}$
+
+```{r}
+A[2,] <- A[2,]-l21*A[1,]; (A[2,])
+A[3,] <- A[3,]-l31*A[1,]; (A[3,])
+A[4,] <- A[4,]-l41*A[1,]; (A[4,])
+```
+
+Es decir la matriz resultante es:
+
+```{r}
+(A)
+```
+
+entonces el pivote es $A_{22} = 1$, calculemos los $l_{32}$ y $l_{42}$
+
+```{r}
+l32 <- A[3,2]/A[2,2];(l32)
+l42 <- A[4,2]/A[2,2];(l42)
+```
+
+Haciendo cero debajo del pivote
+
+```{r}
+A[3,] <- A[3,]-l32*A[2,];(A[3,])
+A[4,] <- A[4,]-l42*A[2,];(A[4,])
+```
+
+La matriz $A$ queda de la forma:
+
+```{r}
+(A)
+```
+
+por tanto el pivote es $A_{33}=-2$, y resta calcylar $l_{43}$
+
+```{r}
+l43 <- A[4,3]/A[3,3];(l43)
+```
+
+haciendo cero debajo del pivote
+
+```{r}
+A[4,] <- A[4,]-l43*A[3,];(A[4,])
+```
+
+Por lo tanto la matriz $A$ resultante es
+```{r}
+(A)
+```
+
+entonces podemos construir la matriz $L$ con los valores $l_{ij}$ calculados en los pasos anteriores
+
+```{r}
+L=diag(4);(L)
+```
+
+```{r}
+L[2,1] <- l21
+L[3,1] <- l31
+L[4,1] <- l41
+L[3,2] <- l32
+L[4,2] <- l42
+L[4,3] <- l43
+(L)
+```
+
+```{r}
+U <- A[,1:4];(U)
+```
+
+Verifiquemos que efectivamente $A=LU$
+```{r}
+Acalculada <- L%*%U; (Acalculada)
+```
+
+## Ejemplo 2
+Apliquemos lo desarrollado para la siguiente matriz $A$
+```{r}
+A=matrix(c(4,0,1,1,3,1,3,1,0,1,2,0,3,2,4,1),nrow = 4,byrow = TRUE); (A)
+```
+
+```{r}
+b=matrix(c(5,6,13,1),nrow = 4);(b)
+```
+
+1)
+
+```{r}
+Ab <- cbind(A,b)
+A <- Ab;
+```
+
+2) 
+
+```{r}
+l21 <- A[2,1]/A[1,1];(l21)
+l31 <- A[3,1]/A[1,1];(l31)
+l41 <- A[4,1]/A[1,1];(l41)
+```
+
+3)
+
+```{r}
+A[2,] <- A[2,]-l21*A[1,]; (A[2,])
+A[3,] <- A[3,]-l31*A[1,]; (A[3,])
+A[4,] <- A[4,]-l41*A[1,]; (A[4,])
+```
+
+4)
+
+```{r}
+l32 <- A[3,2]/A[2,2];(l32)
+l42 <- A[4,2]/A[2,2];(l42)
+```
+
+5)
+
+```{r}
+A[3,] <- A[3,]-l32*A[2,];(A[3,])
+A[4,] <- A[4,]-l42*A[2,];(A[4,])
+```
+
+6)
+
+```{r}
+l43 <- A[4,3]/A[3,3];(l43)
+```
+
+7)
+
+```{r}
+A[4,] <- A[4,]-l43*A[3,];(A[4,])
+```
+
+8)
+
+```{r}
+L=diag(4);(L)
+```
+
+9)
+
+```{r}
+L[2,1] <- l21
+L[3,1] <- l31
+L[4,1] <- l41
+L[3,2] <- l32
+L[4,2] <- l42
+L[4,3] <- l43; 
+(L)
+```
+
+10)
+
+```{r}
+U <- A[,1:4];(U)
+```
+
+11)
+
+```{r}
+Acalculada <- L%*%U; (Acalculada)
+```
+
+## Ejercicio
+
+Aplicar la factorización $LU$ a la matriz A definida por
+
+```{r}
+A=matrix(c(2,3,2,4,
+           4,10,-4,0,
+           -3,-2,-5,-2,
+           -2,4,4,-7),nrow = 4,byrow = TRUE)
+(A)
+```
+
+Usamos del Ejemplo 1 la matriz *b*
+
+```{r}
+b=matrix(c(10,31,-2,18),nrow = 4);(b)
+```
+
+Adjuntamos la matriz
+
+```{r}
+Ab <- cbind(A,b); (Ab)
+```
+
+Guardamos y segimos operando sacando nuestra primera *"l"*
+
+```{r}
+A <- Ab;
+l21 <- A[2,1]/A[1,1]; (l21)
+l31 <- A[3,1]/A[1,1]; (l31)
+l41 <- A[4,1]/A[1,1]; (l41)
+```
+
+Re construimos la matriz
+
+```{r}
+A[2,] <- A[2,]-l21*A[1,]; (A[2,])
+A[3,] <- A[3,]-l31*A[1,]; (A[3,])
+A[4,] <- A[4,]-l41*A[1,]; (A[4,])
+```
+
+Matriz resultante es
+
+```{r}
+(A)
+```
+
+Creamos las siguientes *"l"*
+
+```{r}
+l32 <- A[3,2]/A[2,2];(l32)
+l42 <- A[4,2]/A[2,2];(l42)
+```
+
+Procedemos ha hacer ceros abajo
+
+```{r}
+A[3,] <- A[3,]-l32*A[2,];(A[3,])
+A[4,] <- A[4,]-l42*A[2,];(A[4,])
+```
+
+Matriz resultante es
+
+```{r}
+(A)
+```
+
+Procedemos a calcular el ultimo l
+
+```{r}
+l43 <- A[4,3]/A[3,3];(l43)
+```
+
+Convertimos por ultimo la ultima fila 
+
+```{r}
+A[4,] <- A[4,]-l43*A[3,];(A[4,])
+```
+
+Una vez realizado llamamos nuestra matriz diagonal
+
+```{r}
+L=diag(4);(L)
+```
+
+Le agregamos a este los valores de los pivotes que calculamos con anterioridad
+
+```{r}
+L[2,1] <- l21
+L[3,1] <- l31
+L[4,1] <- l41
+L[3,2] <- l32
+L[4,2] <- l42
+L[4,3] <- l43; 
+(L)
+```
+
+Llamamos la matriz *A* a exepcion de la ccolumna 5
+
+```{r}
+U <- A[,1:4];(U)
+```
+
+Multiplicamos U y L para que nos de la matriz A
+
+```{r}
+Acalculada <- L%*%U; (Acalculada)
+```
+
+# Notas importantes
+
+
+**Nota 1** Si se fija $l_{ii}=1$ se le denomina factorizacion *Doolitle*.
+
+**Nota 2** Una matriz $A$ tiene factorización de Doolitle si y sólo sí se le puede aplicar el metodo de eliminación de Gauss sin pivoteo.
+
+**Nota 3** Si $U=L^{T}$ entonces la factorización se le denomina *factorización de Cholesky*.
+
+**Nota 4** Si la matriz es simétrica y definida positiva, entonces $A=LL^{T}$.
