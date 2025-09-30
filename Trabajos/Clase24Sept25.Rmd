@@ -1,6 +1,6 @@
 ---
 title: "Clase de Métodos Numéricos"
-author: "Carlos E Martínez-Rodríguez"
+author: "Ortiz Cruz José Gabriel"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
   html_document:
@@ -456,3 +456,4 @@ Acalculada <- L%*%U; (Acalculada)
 **Nota 3** Si $U=L^{T}$ entonces la factorización se le denomina *factorización de Cholesky*.
 
 **Nota 4** Si la matriz es simétrica y definida positiva, entonces $A=LL^{T}$.
+
